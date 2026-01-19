@@ -25,7 +25,7 @@ fi
 rm -f STATUS.md
 
 # Append tracking instructions to the prompt
-FULL_PROMPT="${PROMPT}. If not already done, break down this large task into small, manageable tasks in TODO.md. Work on one phase at a time. Mark tasks as checked or unchecked in TODO.md as you complete them. Write automated unit and integration tests for every piece of functionality to ensure completed work doesn't break. Always use timeouts on CLI commands to prevent deadlocked processes. After completing a phase, update STATUS.md to \"WORKING\" if there is more work to do, or \"COMPLETED\" if the entire task is finished. End with a 1 paragraph summary of what you accomplished in this iteration."
+FULL_PROMPT="${PROMPT}. If not already done, break down this large task into small, manageable tasks in TODO.md. Work on one phase at a time. Write automated unit and integration tests for every piece of functionality to ensure completed work doesn't break. Always use timeouts on CLI commands to prevent deadlocked processes. After completing a phase, update STATUS.md to \"WORKING\" if there is more work to do, or \"COMPLETED\" if the entire task is finished. IMPORTANT: At the end of this iteration, you MUST update TODO.md to mark off all tasks you accomplished by changing [ ] to [x]. This is critical for tracking progress across iterations. End with a 1 paragraph summary of what you accomplished in this iteration."
 
 echo "Starting timeloop with max $MAX_ITERATIONS iterations..."
 echo "Prompt: $FULL_PROMPT"
