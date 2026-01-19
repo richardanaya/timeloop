@@ -23,17 +23,18 @@ The main loop script that runs an AI coding agent iteratively until the task is 
 
 **Usage:**
 ```bash
-./timeloop "<prompt>" <max_iterations>
+./timeloop "<prompt>" <max_iterations> [model]
 ```
 
-**Example:**
+**Examples:**
 ```bash
 ./timeloop "Build a REST API with user authentication" 10
+./timeloop "Build a REST API with user authentication" 10 opencode/claude-code
 ```
 
 **How it works:**
 
-1. Takes a prompt and maximum iteration count as arguments
+1. Takes a prompt, maximum iteration count, and optional model as arguments (defaults to `opencode/grok-code`)
 2. Automatically instructs the agent to:
    - Break down large tasks into manageable items in `TODO.md`
    - Work on one phase at a time

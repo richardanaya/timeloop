@@ -1,19 +1,21 @@
 #!/bin/bash
 
 # timeloop.sh - Run opencode with a prompt in a loop until completion
-# Usage: ./timeloop.sh "<prompt>" <max_iterations>
+# Usage: ./timeloop.sh "<prompt>" <max_iterations> [model]
 
 set -e
 
 # Check arguments
 if [ $# -lt 2 ]; then
-    echo "Usage: $0 \"<prompt>\" <max_iterations>"
+    echo "Usage: $0 \"<prompt>\" <max_iterations> [model]"
     echo "Example: $0 \"Build a simple web server\" 5"
+    echo "Example: $0 \"Build a simple web server\" 5 opencode/claude-code"
     exit 1
 fi
 
 PROMPT="$1"
 MAX_ITERATIONS="$2"
+MODEL="${3:-opencode/grok-code}"
 
 # Validate max_iterations is a number
 if ! [[ "$MAX_ITERATIONS" =~ ^[0-9]+$ ]]; then
@@ -28,6 +30,7 @@ rm -f STATUS.md
 FULL_PROMPT="${PROMPT}. If not already done, break down this large task into small, manageable tasks in TODO.md. Work on one phase at a time. Write automated unit and integration tests for every piece of functionality to ensure completed work doesn't break. Always use timeouts on CLI commands to prevent deadlocked processes. After completing a phase, update STATUS.md to \"WORKING\" if there is more work to do, or \"COMPLETED\" if the entire task is finished. IMPORTANT: Only set STATUS.md to \"COMPLETED\" when ALL checkboxes in TODO.md are checked off (no remaining [ ] items - every task must be [x]). At the end of this iteration, you MUST update TODO.md to mark off all tasks you accomplished by changing [ ] to [x]. This is critical for tracking progress across iterations. End with a 1 paragraph summary of what you accomplished in this iteration."
 
 echo "Starting timeloop with max $MAX_ITERATIONS iterations..."
+echo "Model: $MODEL"
 echo "Prompt: $FULL_PROMPT"
 echo "----------------------------------------"
 
@@ -37,13 +40,13 @@ for ((i=1; i<=MAX_ITERATIONS; i++)); do
     echo ""
 
     # Run opencode with the prompt
-    opencode run -m opencode/grok-code "$FULL_PROMPT"
+    opencode run -m "$MODEL" "$FULL_PROMPT"
 
     echo ""
     echo "--- Checking project status ---"
 
     # Run opencode to get the current status and capture output
-    STATUS_OUTPUT=$(opencode run -m opencode/grok-code "Read STATUS.md and output only the current status: COMPLETED or WORKING" 2>&1)
+    STATUS_OUTPUT=$(opencode run -m "$MODEL" "Read STATUS.md and output only the current status: COMPLETED or WORKING" 2>&1)
 
     # Convert to lowercase and check for completion
     STATUS_LOWER=$(echo "$STATUS_OUTPUT" | tr '[:upper:]' '[:lower:]')
