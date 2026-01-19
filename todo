@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Script to modify TODO.md using opencode run
+
+if [ $# -eq 0 ]; then
+    echo "Usage: todo <prompt>"
+    echo "Example: todo 'Add a task to buy groceries'"
+    exit 1
+fi
+
+prompt="$*"
+
+opencode run "Modify the file TODO.md according to the following request: $prompt. IMPORTANT: Always use markdown checkbox format for todo items - use '- [ ]' for unchecked/incomplete items and '- [x]' for checked/completed items."

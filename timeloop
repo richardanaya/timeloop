@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# timeloop.sh - Run opencode with a prompt in a loop until completion
+# Usage: ./timeloop.sh "<prompt>" <max_iterations>
+
+set -e
+
+# Check arguments
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 \"<prompt>\" <max_iterations>"
+    echo "Example: $0 \"Build a simple web server\" 5"
+    exit 1
+fi
+
+PROMPT="$1"
+MAX_ITERATIONS="$2"
+
+# Validate max_iterations is a number
+if ! [[ "$MAX_ITERATIONS" =~ ^[0-9]+$ ]]; then
+    echo "Error: max_iterations must be a positive integer"
+    exit 1
+fi
+
+# Remove any existing STATUS.md to start fresh
+rm -f STATUS.md
+
+# Append tracking instructions to the prompt
+FULL_PROMPT="${PROMPT}. If not already done, break down this large task into small, manageable tasks in TODO.md. Work on one phase at a time. Mark tasks as checked or unchecked in TODO.md as you complete them. Write automated unit and integration tests for every piece of functionality to ensure completed work doesn't break. Always use timeouts on CLI commands to prevent deadlocked processes. After completing a phase, update STATUS.md to \"WORKING\" if there is more work to do, or \"COMPLETED\" if the entire task is finished. End with a 1 paragraph summary of what you accomplished in this iteration."
+
+echo "Starting timeloop with max $MAX_ITERATIONS iterations..."
+echo "Prompt: $FULL_PROMPT"
+echo "----------------------------------------"
+
+for ((i=1; i<=MAX_ITERATIONS; i++)); do
+    echo ""
+    echo "=== Iteration $i of $MAX_ITERATIONS ==="
+    echo ""
+
+    # Run opencode with the prompt
+    opencode run -m opencode/grok-code "$FULL_PROMPT"
+
+    echo ""
+    echo "--- Checking project status ---"
+
+    # Run opencode to get the current status and capture output
+    STATUS_OUTPUT=$(opencode run -m opencode/grok-code "Read STATUS.md and output only the current status: COMPLETED or WORKING" 2>&1)
+
+    # Convert to lowercase and check for completion
+    STATUS_LOWER=$(echo "$STATUS_OUTPUT" | tr '[:upper:]' '[:lower:]')
+
+    if echo "$STATUS_LOWER" | grep -q "completed"; then
+        echo ""
+        echo "========================================="
+        echo "Project status: COMPLETED"
+        echo "Stopping loop early at iteration $i"
+        echo "========================================="
+        exit 0
+    else
+        echo "Project status: WORKING (continuing...)"
+    fi
+done
+
+echo ""
+echo "========================================="
+echo "Reached maximum iterations ($MAX_ITERATIONS)"
+echo "Project may still be in progress"
+echo "========================================="
