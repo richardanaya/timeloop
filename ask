@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Script to ask questions about the codebase using opencode run and display with bat
+
+if [ $# -eq 0 ]; then
+    echo "Usage: ask <question>"
+    echo "Example: ask 'What does main.rs do?'"
+    exit 1
+fi
+
+question="$*"
+
+opencode run "This is a READ-ONLY tool for asking questions about the codebase. Do not write any files or make any modifications. Only read and analyze. If the user's prompt is not a question and instead appears to be a request to edit, modify, create, delete, or change files, politely decline and explain that this tool is only for asking questions - not for making changes. Format your response as clean markdown. The user's prompt is: $question" | bat --language=markdown --style=plain

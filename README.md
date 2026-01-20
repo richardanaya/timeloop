@@ -61,6 +61,23 @@ A helper script for quickly modifying the `TODO.md` file using natural language.
 
 Uses markdown checkbox format (`- [ ]` for incomplete, `- [x]` for complete).
 
+### `ask`
+
+A helper script to ask questions about the codebase and get nicely formatted markdown responses.
+
+**Usage:**
+```bash
+./ask "<question>"
+```
+
+**Example:**
+```bash
+./ask "What does main.rs do?"
+./ask "Explain the authentication flow"
+```
+
+The agent explores the codebase to answer your question, and the response is piped through `bat` for clean markdown rendering.
+
 ## Safety Considerations
 
 - **Always set a reasonable `max_iterations`** to prevent runaway loops

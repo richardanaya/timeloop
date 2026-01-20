@@ -46,7 +46,7 @@ for ((i=1; i<=MAX_ITERATIONS; i++)); do
     echo "--- Checking project status ---"
 
     # Run opencode to get the current status and capture output
-    STATUS_OUTPUT=$(opencode run -m "$MODEL" "Read STATUS.md and output only the current status: COMPLETED or WORKING" 2>&1)
+    STATUS_OUTPUT=$(opencode run -m "opencode/grok-code" "Read STATUS.md and output only the current status: COMPLETED or WORKING" 2>&1)
 
     # Convert to lowercase and check for completion
     STATUS_LOWER=$(echo "$STATUS_OUTPUT" | tr '[:upper:]' '[:lower:]')
