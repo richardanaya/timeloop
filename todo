@@ -10,4 +10,4 @@ fi
 
 prompt="$*"
 
-opencode run "Modify the file TODO.md according to the following request: $prompt. IMPORTANT: Always use markdown checkbox format for todo items - use '- [ ]' for unchecked/incomplete items and '- [x]' for checked/completed items."
+opencode run -m "opencode/grok-code" "Modify the file TODO.md according to the following request: $prompt. IMPORTANT: Always use markdown checkbox format for todo items - use '- [ ]' for unchecked/incomplete items and '- [x]' for checked/completed items."
